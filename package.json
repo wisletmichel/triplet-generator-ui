@@ -7,9 +7,13 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.20.0",
+    "docxtemplater": "^3.19.7",
+    "jspdf": "^2.1.1",
+    "pizzip": "^3.0.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-to-print": "^2.11.0"
   },
   "scripts": {
     "start": "react-scripts start",
