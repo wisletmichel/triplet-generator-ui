@@ -1,24 +1,23 @@
 import PizZip from 'pizzip';
 import React, {Fragment, useRef} from 'react';
 import axios from 'axios'
-import {featureFlags} from "./constants/appConstants";
 import Docxtemplater from "docxtemplater";
-import './App.css'
-import TripletsReport from "./components/TripletsReport";
+import '../App.css'
 import {useReactToPrint} from "react-to-print";
+import {featureFlags} from "../constants/appConstants";
+import TripletsReport from "./TripletsReport";
 
-function App() {
+function AppV2() {
 
     const componentRef = useRef();
-    const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    });
+    const handlePrint = useReactToPrint({content: () => componentRef.current});
 
 
     const [useCase, setUseCase] = React.useState('');
     const [tripletResponse, setTripletResponse] = React.useState({tripletList: []});
     const [loading, setLoading] = React.useState(false);
     const [selectedFile, setSelectedFile] = React.useState(null);
+
     const postRequest = payload => {
         axios.post(
             'http://localhost:9090/api/parser',
@@ -61,8 +60,7 @@ function App() {
 
 
     return (
-        <div className="App">
-            <header className="App-header">
+            <div style={{ marginTop: '50px', marginLeft: '50px'}}>
                 {loading && (<div>Traitement en cours....</div>)}
                 {!featureFlags.inputFileEnabled && (
                     <form id="noter-save-form" method="POST" onSubmit={onSubmit}>
@@ -82,19 +80,20 @@ function App() {
                                 type="submit"
                                 value="SUBMIT"
                                 onClick={onSubmit}
-                                disabled={loading || !!!useCase}
+                                disabled={loading}
                             />
                         </div>
                     </form>
                 )}
                 {featureFlags.inputFileEnabled && (
                     <Fragment>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div className="form-group files color">
+                        <div>
+                            <div>
+                                <div>
+                                    <div>
                                         <label>Veuillez choisir un fichier</label>
                                         <input
+                                            style={{display: 'inline', width: '50%', marginLeft: '5px'}}
                                             type="file"
                                             className="form-control"
                                             name="file"
@@ -103,14 +102,12 @@ function App() {
                                                 setSelectedFile(file);
                                             }}
                                         />
-                                    </div>
-                                    <div className="col-md-6">
                                         <input
-                                            style={{backgroundColor: 'inherit'}}
+                                            style={{marginLeft: '10px'}}
                                             type="submit"
                                             value="Soumettre"
                                             onClick={onSubmit}
-                                            disabled={loading}
+                                            disabled={loading || !!!selectedFile}
                                         />
                                     </div>
                                 </div>
@@ -119,9 +116,8 @@ function App() {
                     </Fragment>
                 )}
                 {tripletResponse?.tripletList.length > 0 && (
-                    <div>
+                    <div style={{marginTop: '10px'}}>
                         <button
-                            style={{backgroundColor: 'inherit'}}
                             onClick={handlePrint}
                         >
                             Telecharger la version PDF
@@ -129,9 +125,8 @@ function App() {
                     </div>
                 )}
                 <TripletsReport apiResponse={tripletResponse} onPrint={handlePrint} ref={componentRef}/>
-            </header>
-        </div>
+            </div>
     );
 }
 
-export default App;
+export default AppV2;
